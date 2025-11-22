@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../controllers/auth_controller.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/ui/hi_paws_theme.dart';
+import '../../core/ui/widgets/hi_paws_buttons.dart';
+import '../../core/ui/widgets/hi_paws_pattern_background.dart';
+import '../../core/ui/widgets/hi_paws_text_field.dart';
 import '../../l10n/app_localizations.dart';
-import '../../widgets/pattern_background.dart';
-import '../../widgets/themed_buttons.dart';
 
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
@@ -33,11 +34,14 @@ class _LoginViewState extends ConsumerState<LoginView> {
     final authState = ref.watch(authControllerProvider);
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      body: PatternBackground(
+      body: HiPawsPatternBackground(
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: const EdgeInsets.symmetric(
+                horizontal: HiPawsSpacing.defaultHorizontal,
+                vertical: HiPawsSpacing.defaultVertical,
+              ),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 520),
                 child: Form(
@@ -45,63 +49,51 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: 16),
                       Text(
                         l10n.translate('login_title_new'),
                         textAlign: TextAlign.center,
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.darkBlue,
-                                ),
+                        style: HiPawsTextStyles.screenTitle,
                       ),
                       const SizedBox(height: 8),
                       Text(
                         l10n.translate('login_prompt'),
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.textSecondary),
+                        style: HiPawsTextStyles.body,
                       ),
-                      const SizedBox(height: 28),
-                      _InputWrapper(
-                        child: TextFormField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            hintText: l10n.translate('email_hint'),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide.none),
-                            labelText: null,
-                          ),
-                          validator: (value) =>
-                              value != null && value.contains('@')
-                                  ? null
-                                  : l10n.translate('invalid_email'),
-                        ),
+                      const SizedBox(height: 32),
+                      Text(l10n.translate('email'),
+                          style: HiPawsTextStyles.orangeSectionLabel),
+                      const SizedBox(height: 6),
+                      HiPawsTextField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        hintText: l10n.translate('email_hint'),
+                        validator: (value) =>
+                            value != null && value.contains('@')
+                                ? null
+                                : l10n.translate('invalid_email'),
                       ),
                       const SizedBox(height: 16),
-                      _InputWrapper(
-                        child: TextFormField(
-                          controller: _passwordController,
-                          obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            hintText: l10n.translate('password_hint'),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide.none),
-                            suffixIcon: IconButton(
-                              icon: Icon(_obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility),
-                              color: AppColors.textSecondary,
-                              onPressed: () => setState(
-                                  () => _obscurePassword = !_obscurePassword),
-                            ),
+                      Text(l10n.translate('password'),
+                          style: HiPawsTextStyles.orangeSectionLabel),
+                      const SizedBox(height: 6),
+                      HiPawsTextField(
+                        controller: _passwordController,
+                        hintText: l10n.translate('password_hint'),
+                        obscureText: _obscurePassword,
+                        validator: (value) =>
+                            (value != null && value.length >= 6)
+                                ? null
+                                : l10n.translate('invalid_password'),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: HiPawsColors.textSecondary,
                           ),
-                          validator: (value) =>
-                              (value != null && value.length >= 6)
-                                  ? null
-                                  : l10n.translate('invalid_password'),
+                          onPressed: () => setState(
+                              () => _obscurePassword = !_obscurePassword),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -115,7 +107,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   content:
                                       Text(l10n.translate('create_account'))),
                             ),
-                            child: Text(l10n.translate('create_account')),
+                            child: Text(l10n.translate('create_account'),
+                                style: HiPawsTextStyles.smallLink),
                           ),
                           TextButton(
                             onPressed: () =>
@@ -124,12 +117,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   content:
                                       Text(l10n.translate('forgot_password'))),
                             ),
-                            child: Text(l10n.translate('forgot_password')),
+                            child: Text(l10n.translate('forgot_password'),
+                                style: HiPawsTextStyles.smallLink),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      OrangeButton(
+                      const SizedBox(height: 16),
+                      HiPawsPrimaryButton(
                         label: l10n.translate('login_button'),
                         onPressed: authState.loading
                             ? null
@@ -143,8 +137,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 }
                               },
                       ),
-                      const SizedBox(height: 12),
-                      GreenButton(
+                      const SizedBox(height: 16),
+                      HiPawsSecondaryButton(
                         label: l10n.translate('login_guest'),
                         onPressed: () async {
                           await ref
@@ -162,8 +156,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
-                      const SizedBox(height: 28),
-                      const _BottomIllustration(),
                     ],
                   ),
                 ),
@@ -172,61 +164,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _BottomIllustration extends StatelessWidget {
-  const _BottomIllustration();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.darkBlue,
-        borderRadius: BorderRadius.circular(32),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.darkBlue.withOpacity(0.25),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          Icon(Icons.home_outlined, color: Colors.white),
-          Icon(Icons.list_alt_outlined, color: Colors.white),
-          Icon(Icons.pets, color: Colors.white),
-          Icon(Icons.settings_outlined, color: Colors.white),
-        ],
-      ),
-    );
-  }
-}
-
-class _InputWrapper extends StatelessWidget {
-  const _InputWrapper({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: child,
     );
   }
 }

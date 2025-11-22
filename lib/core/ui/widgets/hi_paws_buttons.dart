@@ -20,7 +20,9 @@ class HiPawsPrimaryButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: onPressed,
-        icon: icon != null ? Icon(icon, color: Colors.white) : const SizedBox.shrink(),
+        icon: icon != null
+            ? Icon(icon, color: Colors.white)
+            : const SizedBox.shrink(),
         label: Text(label.toUpperCase(), style: HiPawsTextStyles.buttonText),
         style: ElevatedButton.styleFrom(
           backgroundColor: HiPawsColors.primaryOrange,

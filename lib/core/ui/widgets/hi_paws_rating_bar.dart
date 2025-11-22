@@ -33,7 +33,8 @@ class HiPawsRatingBarRow extends StatelessWidget {
               child: Icon(
                 Icons.star,
                 size: 22,
-                color: index < value ? HiPawsColors.primaryOrange : Colors.white,
+                color:
+                    index < value ? HiPawsColors.primaryOrange : Colors.white,
               ),
             ),
           ),

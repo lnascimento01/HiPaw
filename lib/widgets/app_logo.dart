@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../core/constants/app_colors.dart';
+import '../core/ui/hi_paws_theme.dart';
 
 class AppLogo extends StatelessWidget {
   const AppLogo({super.key, this.size = 96, required this.title});
@@ -17,7 +17,7 @@ class AppLogo extends StatelessWidget {
           height: size,
           width: size,
           decoration: const BoxDecoration(
-            color: AppColors.orange,
+            color: HiPawsColors.primaryOrange,
             shape: BoxShape.circle,
           ),
           child: Stack(
@@ -35,10 +35,7 @@ class AppLogo extends StatelessWidget {
         const SizedBox(height: 12),
         Text(
           title,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: AppColors.darkBlue,
-                fontWeight: FontWeight.w700,
-              ),
+          style: HiPawsTextStyles.logo.copyWith(fontSize: 24),
         ),
       ],
     );

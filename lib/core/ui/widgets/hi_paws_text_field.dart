@@ -35,23 +35,29 @@ class HiPawsTextField extends StatelessWidget {
           onChanged: onChanged,
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: HiPawsTextStyles.body.copyWith(color: HiPawsColors.textSecondary.withOpacity(0.6)),
+            hintStyle: HiPawsTextStyles.body
+                .copyWith(color: HiPawsColors.textSecondary.withOpacity(0.6)),
             filled: true,
             fillColor: Colors.white,
             suffixIcon: suffixIcon,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(HiPawsSpacing.textFieldBorderRadius),
+              borderRadius:
+                  BorderRadius.circular(HiPawsSpacing.textFieldBorderRadius),
               borderSide: const BorderSide(color: HiPawsColors.fieldBorder),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(HiPawsSpacing.textFieldBorderRadius),
+              borderRadius:
+                  BorderRadius.circular(HiPawsSpacing.textFieldBorderRadius),
               borderSide: const BorderSide(color: HiPawsColors.fieldBorder),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(HiPawsSpacing.textFieldBorderRadius),
-              borderSide: const BorderSide(color: HiPawsColors.primaryOrange, width: 1.4),
+              borderRadius:
+                  BorderRadius.circular(HiPawsSpacing.textFieldBorderRadius),
+              borderSide: const BorderSide(
+                  color: HiPawsColors.primaryOrange, width: 1.4),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
           ),
         ),
       ],

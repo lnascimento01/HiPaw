@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/favorites_controller.dart';
+import '../../../core/extensions/pillar_localization_extension.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../models/exercise.dart';
 import '../hi_paws_theme.dart';
 import 'hi_paws_chip.dart';
@@ -23,6 +25,7 @@ class HiPawsExerciseCard extends ConsumerWidget {
     final favorites = ref.watch(favoritesControllerProvider).favorites;
     final isFavorite = favorites.any((fav) => fav.exerciseId == exercise.id);
     final authState = ref.watch(authControllerProvider);
+    final l10n = AppLocalizations.of(context);
     return GestureDetector(
       onTap: onTap ??
           () {
@@ -50,13 +53,16 @@ class HiPawsExerciseCard extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     exercise.title,
-                    style: HiPawsTextStyles.sectionTitle.copyWith(color: Colors.white),
+                    style: HiPawsTextStyles.sectionTitle
+                        .copyWith(color: Colors.white),
                   ),
                 ),
                 GestureDetector(
                   onTap: authState.user == null
                       ? null
-                      : () => ref.read(favoritesControllerProvider.notifier).toggleFavorite(exercise),
+                      : () => ref
+                          .read(favoritesControllerProvider.notifier)
+                          .toggleFavorite(exercise),
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
@@ -68,7 +74,9 @@ class HiPawsExerciseCard extends ConsumerWidget {
                         ),
                         child: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? HiPawsColors.accentMint : HiPawsColors.primaryNavy,
+                          color: isFavorite
+                              ? HiPawsColors.accentMint
+                              : HiPawsColors.primaryNavy,
                           size: 18,
                         ),
                       ),
@@ -100,7 +108,8 @@ class HiPawsExerciseCard extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: exercise.pillars
-                  .map((pillar) => HiPawsChip(label: pillar.name))
+                  .map((pillar) =>
+                      HiPawsChip(label: pillar.localizedLabel(l10n)))
                   .toList(growable: false),
             ),
           ],

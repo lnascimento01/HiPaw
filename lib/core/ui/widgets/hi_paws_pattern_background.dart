@@ -50,7 +50,8 @@ class _PatternPainter extends CustomPainter {
 
     for (double y = 40; y < size.height + 80; y += 160) {
       for (double x = 40; x < size.width + 60; x += 160) {
-        final rect = Rect.fromCenter(center: Offset(x, y), width: 34, height: 12);
+        final rect =
+            Rect.fromCenter(center: Offset(x, y), width: 34, height: 12);
         final rRect = RRect.fromRectAndRadius(rect, const Radius.circular(10));
         canvas.drawRRect(rRect, paint);
       }

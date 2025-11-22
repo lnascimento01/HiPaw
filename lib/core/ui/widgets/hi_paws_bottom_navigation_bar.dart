@@ -86,7 +86,9 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isActive ? HiPawsColors.iconActive : HiPawsColors.iconInactive.withOpacity(0.6);
+    final color = isActive
+        ? HiPawsColors.iconActive
+        : HiPawsColors.iconInactive.withOpacity(0.6);
     return Expanded(
       child: InkWell(
         borderRadius: BorderRadius.circular(18),

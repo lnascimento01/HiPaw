@@ -4,8 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../controllers/exercise_controller.dart';
 import '../../controllers/recent_controller.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/extensions/pillar_localization_extension.dart';
+import '../../core/ui/hi_paws_theme.dart';
+import '../../core/ui/widgets/hi_paws_chip.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/exercise.dart';
 import '../../widgets/exercise_card.dart';
@@ -23,186 +24,94 @@ class HomeView extends ConsumerWidget {
     final recents = exercisesState.exercises
         .where((exercise) => recentState.exerciseIds.contains(exercise.id))
         .toList()
-      ..sort((a, b) => recentState.exerciseIds
-          .indexOf(a.id)
-          .compareTo(recentState.exerciseIds.indexOf(b.id)));
+      ..sort(
+        (a, b) => recentState.exerciseIds
+            .indexOf(a.id)
+            .compareTo(recentState.exerciseIds.indexOf(b.id)),
+      );
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          l10n.translate('home_title_hi_paws'),
+          style: HiPawsTextStyles.screenTitle,
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+      ),
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: HiPawsSpacing.defaultHorizontal,
+            vertical: HiPawsSpacing.defaultVertical,
+          ),
+          children: [
+            if (recentState.pendingFeedback.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: HiPawsColors.chipBackground,
+                  borderRadius:
+                      BorderRadius.circular(HiPawsSpacing.cardBorderRadius),
+                ),
+                child: Row(
                   children: [
-                    Center(
-                      child: Text(
-                        l10n.translate('home_title_hi_paws'),
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
-                            ?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                      ),
+                    const CircleAvatar(
+                      backgroundColor: HiPawsColors.primaryNavy,
+                      foregroundColor: Colors.white,
+                      child: Icon(Icons.feedback_outlined),
                     ),
-                    const SizedBox(height: 8),
-                    if (recentState.pendingFeedback.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.all(18),
-                        decoration: BoxDecoration(
-                          color: AppColors.softLilac.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Row(
-                          children: [
-                            const CircleAvatar(
-                              backgroundColor: AppColors.darkBlue,
-                              foregroundColor: Colors.white,
-                              child: Icon(Icons.feedback_outlined),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.translate('pending_feedback'),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall
-                                        ?.copyWith(
-                                            color: AppColors.darkBlue,
-                                            fontWeight: FontWeight.w700),
-                                  ),
-                                  Text(
-                                    l10n.translate('pending_feedback_hint'),
-                                    style: TextStyle(
-                                        color: AppColors.textSecondary),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search),
-                              hintText: l10n.translate('home_search'),
-                              filled: true,
-                              fillColor: AppColors.softLilac.withOpacity(0.3),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(22),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            onChanged: ref
-                                .read(exerciseControllerProvider.notifier)
-                                .search,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.darkBlue,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.darkBlue.withOpacity(0.25),
-                                blurRadius: 12,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.tune, color: Colors.white),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: PsychomotorPillar.values
-                            .map(
-                              (pillar) => Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: _FilterPill(
-                                  label: pillar.localizedLabel(l10n),
-                                  selected: exercisesState.activePillars
-                                      .contains(pillar),
-                                  onTap: () => ref
-                                      .read(exerciseControllerProvider.notifier)
-                                      .togglePillar(pillar),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    if (showRecents) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(l10n.translate('recent'),
-                              style: Theme.of(context).textTheme.titleMedium),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(l10n.translate('home_view_all')),
-                          )
+                          Text(
+                            l10n.translate('pending_feedback'),
+                            style: HiPawsTextStyles.sectionTitle.copyWith(
+                              fontSize: 16,
+                            ),
+                          ),
+                          Text(
+                            l10n.translate('pending_feedback_hint'),
+                            style: HiPawsTextStyles.body,
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      if (recents.isEmpty)
-                        _EmptyRecents(l10n: l10n)
-                      else
-                        Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          children: recents
-                              .map(
-                                (exercise) => _RecentChip(
-                                  label: exercise.title,
-                                  onTap: () =>
-                                      context.push('/exercise/${exercise.id}'),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      const SizedBox(height: 24),
-                    ],
-                    Text(l10n.translate('exercises'),
-                        style: Theme.of(context).textTheme.titleMedium),
+                    ),
                   ],
                 ),
               ),
+            if (showRecents) ...[
+              const SizedBox(height: 24),
+              _RecentSection(
+                l10n: l10n,
+                recents: recents,
+                onChipTap: (exercise) =>
+                    context.push('/exercise/${exercise.id}'),
+              ),
+            ],
+            const SizedBox(height: 24),
+            _SearchBar(
+              hint: l10n.translate('home_search'),
+              onChanged: ref.read(exerciseControllerProvider.notifier).search,
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final exercise = exercisesState.filtered[index];
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: ExerciseCard(exercise: exercise),
-                  );
-                },
-                childCount: exercisesState.filtered.length,
+            const SizedBox(height: 20),
+            _PillarsFilter(
+              l10n: l10n,
+              selected: exercisesState.activePillars,
+              onToggle:
+                  ref.read(exerciseControllerProvider.notifier).togglePillar,
+            ),
+            const SizedBox(height: 24),
+            Text(l10n.translate('exercises'),
+                style: HiPawsTextStyles.sectionTitle),
+            const SizedBox(height: 16),
+            ...exercisesState.filtered.map(
+              (exercise) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: ExerciseCard(exercise: exercise),
               ),
             ),
-            SliverToBoxAdapter(
-                child: SizedBox(
-                    height: MediaQuery.of(context).padding.bottom + 16)),
           ],
         ),
       ),
@@ -210,95 +119,150 @@ class HomeView extends ConsumerWidget {
   }
 }
 
-class _EmptyRecents extends StatelessWidget {
-  const _EmptyRecents({required this.l10n});
+class _RecentSection extends StatelessWidget {
+  const _RecentSection({
+    required this.l10n,
+    required this.recents,
+    required this.onChipTap,
+  });
 
   final AppLocalizations l10n;
+  final List<Exercise> recents;
+  final ValueChanged<Exercise> onChipTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l10n.translate('recent'),
+                style: HiPawsTextStyles.sectionTitle),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                l10n.translate('home_view_all'),
+                style: HiPawsTextStyles.smallLink,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        if (recents.isEmpty)
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: HiPawsColors.chipBackground,
+              borderRadius:
+                  BorderRadius.circular(HiPawsSpacing.cardBorderRadius),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.translate('recent_empty'),
+                  style: HiPawsTextStyles.sectionTitle.copyWith(fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                Text(l10n.translate('recent_empty_hint'),
+                    style: HiPawsTextStyles.body),
+              ],
+            ),
+          )
+        else
+          SizedBox(
+            height: 38,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (_, index) {
+                final exercise = recents[index];
+                return HiPawsChip(
+                  label: exercise.title,
+                  onTap: () => onChipTap(exercise),
+                );
+              },
+              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              itemCount: recents.length,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _SearchBar extends StatelessWidget {
+  const _SearchBar({required this.hint, required this.onChanged});
+
+  final String hint;
+  final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppColors.softLilac.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(24),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(HiPawsSpacing.cardBorderRadius),
+        border: Border.all(color: HiPawsColors.fieldBorder),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l10n.translate('recent_empty'),
-              style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Text(l10n.translate('recent_empty_hint')),
-        ],
-      ),
-    );
-  }
-}
-
-class _RecentChip extends StatelessWidget {
-  const _RecentChip({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFDE9D2),
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: AppColors.orange.withOpacity(0.3)),
-        ),
-        child: Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.orange,
-            fontWeight: FontWeight.w700,
-          ),
+      child: TextField(
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.search),
+          hintText: hint,
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(vertical: 14),
         ),
       ),
     );
   }
 }
 
-class _FilterPill extends StatelessWidget {
-  const _FilterPill(
-      {required this.label, required this.selected, required this.onTap});
+class _PillarsFilter extends StatelessWidget {
+  const _PillarsFilter({
+    required this.l10n,
+    required this.selected,
+    required this.onToggle,
+  });
 
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
+  final AppLocalizations l10n;
+  final Set<PsychomotorPillar> selected;
+  final void Function(PsychomotorPillar) onToggle;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: selected ? AppColors.darkBlue : const Color(0xFFFDE9D2),
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(selected ? 0.2 : 0.05),
-              blurRadius: selected ? 14 : 6,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: selected ? Colors.white : AppColors.orange,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: PsychomotorPillar.values
+            .map(
+              (pillar) => Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: GestureDetector(
+                  onTap: () => onToggle(pillar),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: selected.contains(pillar)
+                          ? HiPawsColors.primaryNavy
+                          : HiPawsColors.chipBackground,
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      pillar.localizedLabel(l10n),
+                      style: HiPawsTextStyles.chip.copyWith(
+                        color: selected.contains(pillar)
+                            ? Colors.white
+                            : HiPawsColors.primaryNavy,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+            .toList(),
       ),
     );
   }
