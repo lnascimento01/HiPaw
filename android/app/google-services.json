@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "634907406412",
+    "project_id": "protocol-fisio-supreme",
+    "storage_bucket": "protocol-fisio-supreme.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634907406412:android:8805ee6be51154a91404e9",
+        "android_client_info": {
+          "package_name": "com.hipaw.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByBQEPLXnBZeMG3fuIf0sVJoH5uMwEdQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: flutter_dev_container_hipaw
     volumes:
-      - /var/www/hi-paw:/app
+      - /var/www/HiPaw:/app
       - /dev/bus/usb:/dev/bus/usb
       - ~/.gradle:/root/.gradle
     stdin_open: true
